@@ -194,3 +194,7 @@ def test_playable_cards():
         Card("S", "J"),
     }
     assert playable_cards((Card("S", "J"),), hand2) == hand2
+
+
+
+# Test Samy
