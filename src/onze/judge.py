@@ -43,18 +43,18 @@ def send_bid(table: Table, bidder: int, bid: int) -> None:
 
 
 def play_card(table: Table, player: int, playable: cards.Hand) -> cards.Card:
-    print(f"<DEBUG> player {player} plays - " f"playable={serialize_hand(playable)}")
+    #print(f"<DEBUG> player {player} plays - " f"playable={serialize_hand(playable)}")
 
     table[player].send("card ?")
     request = table[player].receive()
     card = unserialize_card(request)
 
     if card not in playable:
-        print(f"<DEBUG> invalid card '{request}'")
+        #print(f"<DEBUG> invalid card '{request}'")
         card = sorted(playable, key=cards.make_card_key())[0]
 
     broadcast(table, f"card {player} {serialize_card(card)}")
-    print(f"<DEBUG> played {serialize_card(card)}")
+    #print(f"<DEBUG> played {serialize_card(card)}")
 
     return card
 
@@ -88,7 +88,7 @@ def setup_table(programs: list[list[str]]) -> Table:
             table[player] = seats.SubprocessSeat(player, program)
 
         table[player].send(f"player {player}")
-        print(f"<DEBUG> player {player} - seat={table[player]}")
+        #print(f"<DEBUG> player {player} - seat={table[player]}")
 
     return table
 
@@ -96,7 +96,7 @@ def setup_table(programs: list[list[str]]) -> Table:
 def run() -> None:
     args = parse_args()
     table = setup_table(args.program)
-    print(f"<DEBUG> seed={args.seed}")
+    #print(f"<DEBUG> seed={args.seed}")
 
     random = Random(args.seed)
     total_scores = {0: 0, 1: 0}
@@ -107,7 +107,7 @@ def run() -> None:
 
         for player, hand in enumerate(hands):
             table[player].send(f"hand {serialize_hand(hand)}")
-            print(f"<DEBUG> player {player} - hand={serialize_hand(hand)}")
+            #print(f"<DEBUG> player {player} - hand={serialize_hand(hand)}")
 
         winner, bid = game.bid(
             starter=starter,
@@ -143,3 +143,6 @@ def run() -> None:
         starter = (starter + 1) % 4
 
     broadcast(table, "end")
+
+
+run()
