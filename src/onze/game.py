@@ -24,6 +24,9 @@ def bid(
     maximum_bid = 105
 
     while len(bids) > 1:
+        # automatic bid for random bot 
+       
+         
         bid = make_bid(bidder)
 
         if bid % 5 == 0 and minimum_bid <= bid <= maximum_bid:

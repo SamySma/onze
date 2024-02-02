@@ -1,6 +1,8 @@
 from collections.abc import Sequence
 from typing import Protocol
 from subprocess import Popen, PIPE
+import random
+
 
 
 class Seat(Protocol):
@@ -54,3 +56,31 @@ class SubprocessSeat:
     def receive(self) -> str:
         assert self.process.stdout is not None
         return self.process.stdout.readline().removesuffix("\n")
+
+
+# RANDOM BOT implementation
+
+class RandomBotSeat:
+    def __init__(self, player: int):
+        self.player = player
+        self.hand = set() # to store the bot's current hand
+        self.last_message = '' # To store the last message received
+
+    def __str__(self):
+        return f"RandomBotSeat(player={self.player})"
+
+    def send(self, message: str) -> None:
+
+        self.last_message = message
+
+        print(f"[seat {self.player} Random bot] <- {message}")
+
+    def receive(self) -> str:
+        if 'bid ?' in self.last_message:
+            # Implement random bidding logic
+            return str(random.randint(50, 105))
+        
+        elif "card ?" in self.last_message:
+            # Implement random card playing logic
+            if self.hand:
+                return random.choice(list(self.hand))

@@ -82,10 +82,18 @@ def setup_table(programs: list[list[str]]) -> Table:
     for player in range(4):
         program = programs[player % len(programs)]
 
-        if program == ["terminal"]:
+        # RANDOM BOT
+        if player == 0:
+            table[player] = seats.RandomBotSeat(player)
+        
+        # other players
+        elif program == ["terminal"]:
             table[player] = seats.TerminalSeat(player)
+
         else:
             table[player] = seats.SubprocessSeat(player, program)
+        
+        
 
         table[player].send(f"player {player}")
         #print(f"<DEBUG> player {player} - seat={table[player]}")
@@ -107,6 +115,8 @@ def run() -> None:
 
         for player, hand in enumerate(hands):
             table[player].send(f"hand {serialize_hand(hand)}")
+
+
             #print(f"<DEBUG> player {player} - hand={serialize_hand(hand)}")
 
         winner, bid = game.bid(
